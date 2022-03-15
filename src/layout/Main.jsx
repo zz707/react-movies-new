@@ -7,35 +7,36 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 
 class Main extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            movies: [],
-        }
-    }
+    state = {
+        movies: [],
+        loading: true,
+    };
 
     searchMovies = (searchString, type = 'all') => {
+        this.setState({loading: true});
+
         fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${searchString}${type !== 'all' ? `&type=${type}` : ''}`)
             .then(response => response.json())
-            .then(data => this.setState({movies: data.Search}));
+            .then(data => this.setState({movies: data.Search, loading: false}));
     }
 
     componentDidMount() {
         fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=matrix`)
             .then(response => response.json())
-            .then(data => this.setState({movies: data.Search}));
+            .then(data => this.setState({movies: data.Search, loading: false}));
     }
 
     render() {
-        const {movies} = this.state;
+        const {movies, loading} = this.state;
 
         return <main className="container content">
-            <Search searchMovies={this.searchMovies} />
+            <Search searchMovies={this.searchMovies}/>
             {
-                movies.length ? (
-                    <Movies movies={this.state.movies}/>
-                ) : <Preloader />
+                loading ? (
+                    <Preloader/>
+                ) : (
+                    <Movies movies={movies}/>
+                )
             }
         </main>;
     }
