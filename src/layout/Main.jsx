@@ -15,6 +15,12 @@ class Main extends React.Component {
         }
     }
 
+    searchMovies = (searchString) => {
+        fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${searchString}`)
+            .then(response => response.json())
+            .then(data => this.setState({movies: data.Search}));
+    }
+
     componentDidMount() {
         fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=matrix`)
             .then(response => response.json())
@@ -25,7 +31,7 @@ class Main extends React.Component {
         const {movies} = this.state;
 
         return <main className="container content">
-            <Search />
+            <Search searchMovies={this.searchMovies} />
             {
                 movies.length ? (
                     <Movies movies={this.state.movies}/>
