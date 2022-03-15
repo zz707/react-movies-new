@@ -15,8 +15,8 @@ class Main extends React.Component {
         }
     }
 
-    searchMovies = (searchString) => {
-        fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${searchString}`)
+    searchMovies = (searchString, type = 'all') => {
+        fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${searchString}${type !== 'all' ? `&type=${type}` : ''}`)
             .then(response => response.json())
             .then(data => this.setState({movies: data.Search}));
     }
